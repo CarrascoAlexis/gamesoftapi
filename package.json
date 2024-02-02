@@ -1,0 +1,23 @@
+{
+  "name": "gamesoftapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarrascoAlexis/gamesoftapi.git"
+  },
+  "author": "kroko_san",
+  "license": "CC0",
+  "bugs": {
+    "url": "https://github.com/CarrascoAlexis/gamesoftapi/issues"
+  },
+  "homepage": "https://github.com/CarrascoAlexis/gamesoftapi#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.9.1"
+  }
+}
