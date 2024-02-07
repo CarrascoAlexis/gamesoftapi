@@ -6,6 +6,8 @@ const router = express.Router()
 const config = require('../config')
 const db = mysql.createConnection(config.db)
 
+const { generateQuery } = require('../functions')
+
 router.get("/", (req, res) => {
     if(req.body.filter == undefined || req.body.filter == null)
     {
@@ -21,36 +23,14 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        let query = "SELECT * FROM game WHERE "
-        results.forEach((element, idx, array) => {
-            if(req.body.filter[element.COLUMN_NAME] != undefined && req.body.filter[element.COLUMN_NAME] != null)
-            {
-                query += `${element.COLUMN_NAME} = "${req.body.filter[element.COLUMN_NAME]}"`
-            }
-            else
-            {
-                query += `${element.COLUMN_NAME} IS NOT NULL`
-            }
-            if (idx != array.length - 1){
-                query += ' AND '
-            }
-        })
-        db.query(query, (err, results) => {
+        db.query(generateQuery("fav", results, req.body.filter), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
-            
         })
     })
 });
-router.get("/:id", (req, res) => {
-    const { id } = req.params;
-    db.query('SELECT * FROM game WHERE id = ?', [id], (err, results) => {
-        if(err) res.json({"error": err})
-        else res.json(results)
-    })
-})
-
 router.post("/create", (req, res) => {
+    if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
     let { title, description, priority_mass, motor_id, budget, cost, state, type_id, player_amount, productor_id } = req.body;
     if(motor_id == null || motor_id == undefined) motor_id = 0
     if(type_id == null ||type_id == undefined) type_id = 0

@@ -6,6 +6,8 @@ const router = express.Router()
 const config = require('../config')
 const db = mysql.createConnection(config.db)
 
+const { generateQuery } = require('../functions')
+
 router.get("/", (req, res) => {
     if(req.body.filter == undefined || req.body.filter == null)
     {
@@ -21,24 +23,9 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        let query = "SELECT * FROM account WHERE "
-        results.forEach((element, idx, array) => {
-            if(req.body.filter[element.COLUMN_NAME] != undefined && req.body.filter[element.COLUMN_NAME] != null)
-            {
-                query += `${element.COLUMN_NAME} = "${req.body.filter[element.COLUMN_NAME]}"`
-            }
-            else
-            {
-                query += `${element.COLUMN_NAME} IS NOT NULL`
-            }
-            if (idx != array.length - 1){
-                query += ' AND '
-            }
-        })
-        db.query(query, (err, results) => {
+        db.query(generateQuery("fav", results, req.body.filter), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
-            
         })
     })
 });

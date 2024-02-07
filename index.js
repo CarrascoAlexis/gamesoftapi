@@ -12,6 +12,7 @@ const usersRouter = require("./routes/users")
 const gamesRouter = require("./routes/games")
 const motorsRouter = require("./routes/motors")
 const typesRouter = require("./routes/types")
+const favRouter = require("./routes/favourites")
 
 // Connection to database
 db.connect((err) => {
@@ -27,11 +28,13 @@ app.use("/users", usersRouter)
 app.use("/games", gamesRouter)
 app.use("/motors", motorsRouter)
 app.use("/types", typesRouter)
+app.use("/favourites", favRouter)
 
 /**
  * USER CONNECTION
  */
 app.post("/connectuser", (req, res) => {
+    if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
     const { id, pass } = req.body;
     console.log(id)
     console.log(pass)
