@@ -9,7 +9,7 @@ const db = mysql.createConnection(config.db)
 const { trustedIps } = require('../index')
 
 router.get("/", (req, res) => {
-    console.log(req.connection.remoteAddress)
+    console.log(req.socket.remoteAddress)
 
 
     if(req.body.filter == undefined || req.body.filter == null)
