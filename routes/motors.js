@@ -6,8 +6,6 @@ const router = express.Router()
 const config = require('../config')
 const db = mysql.createConnection(config.db)
 
-const { trustedIps } = require('../index')
-
 router.get("/", (req, res) => {
     console.log(req.socket.remoteAddress)
 
@@ -49,6 +47,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
+    if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
+    
     let { name, description, link, image } = req.body;
     db.query('INSERT into motor VALUES (NULL, ?, ?, ?, ?)', [name, description, link, image], (err, results) => {
         if(err) res.json({"error": err})

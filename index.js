@@ -13,8 +13,6 @@ const gamesRouter = require("./routes/games")
 const motorsRouter = require("./routes/motors")
 const typesRouter = require("./routes/types")
 
-const trustedIps = ["localhost", "90.22.166.219", "85.215.169.18"]
-
 // Connection to database
 db.connect((err) => {
     if (err) {
@@ -51,5 +49,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-module.exports.trustedIps = trustedIps;
