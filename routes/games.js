@@ -31,6 +31,7 @@ router.get("/", (req, res) => {
 });
 router.post("/create", (req, res) => {
     if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
+    
     let { title, description, priority_mass, motor_id, budget, cost, state, type_id, player_amount, productor_id } = req.body;
     if(motor_id == null || motor_id == undefined) motor_id = 0
     if(type_id == null ||type_id == undefined) type_id = 0

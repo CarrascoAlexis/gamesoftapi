@@ -37,4 +37,17 @@ router.get("/:id", (req, res) => {
     })
 })
 
+router.post("/create", (req, res) => {
+    // if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
+
+    let { username, email, password, profile_picture, grants, first_name, last_name, profile_public } = req.body;
+    if(profile_public == null || profile_public == undefined) profile_public = 0
+    console.log({ username, email, password, profile_picture, grants, first_name, last_name, profile_public })
+    console.log("COUCOU")
+    db.query('INSERT into account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)', [username, email, password, profile_picture, grants, first_name, last_name, profile_public], (err, results) => {
+        if(err) res.json({"error": err})
+        else res.json(results)
+    })
+})
+
 module.exports = router;
