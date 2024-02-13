@@ -48,6 +48,9 @@ app.post("/connectuser", (req, res) => {
 app.get('/', (req, res) => {
     res.send(`Succesfully connected to ${db.config.database} Database.`)
 })
+app.get('/getip', (req, res) => {
+    res.send(`ip: ${req.socket.remoteAddress}`)
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

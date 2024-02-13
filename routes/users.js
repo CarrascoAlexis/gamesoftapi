@@ -42,6 +42,7 @@ router.post("/create", (req, res) => {
 
     let { username, email, password, profile_picture, grants, first_name, last_name, profile_public } = req.body;
     if(profile_public == null || profile_public == undefined) profile_public = 0
+    if(grants == null ||grants == undefined) grants = 0;
     console.log({ username, email, password, profile_picture, grants, first_name, last_name, profile_public })
     console.log("COUCOU")
     db.query('INSERT into account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)', [username, email, password, profile_picture, grants, first_name, last_name, profile_public], (err, results) => {
