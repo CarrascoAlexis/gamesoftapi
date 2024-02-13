@@ -48,8 +48,8 @@ app.post("/connectuser", (req, res) => {
 app.get('/', (req, res) => {
     res.send(`Succesfully connected to ${db.config.database} Database.`)
 })
-app.get('/getip', (req, res) => {
-    res.send(`ip: ${req.socket.remoteAddress}`)
+app.get('/ip', (req, res) => {
+    res.send(`Request IP: ${req.socket.remoteAddress}`)
 })
 
 app.listen(PORT, () => {
