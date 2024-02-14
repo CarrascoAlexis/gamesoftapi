@@ -8,6 +8,6 @@ const config = {
       connectTimeout: 60000
     },
     listPerPage: 10,
-    trustedsIp: ["::ffff:90.22.166.219"]
+    trustedsIp: ["::ffff:90.22.166.219", "::1"]
   };
 module.exports = config;

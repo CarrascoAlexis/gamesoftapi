@@ -13,6 +13,7 @@ const gamesRouter = require("./routes/games")
 const motorsRouter = require("./routes/motors")
 const typesRouter = require("./routes/types")
 const favRouter = require("./routes/favourites")
+const sessionsRouter = require("./routes/sessions")
 
 // Connection to database
 db.connect((err) => {
@@ -29,6 +30,7 @@ app.use("/games", gamesRouter)
 app.use("/motors", motorsRouter)
 app.use("/types", typesRouter)
 app.use("/favourites", favRouter)
+app.use("/sessions", sessionsRouter)
 
 /**
  * USER CONNECTION

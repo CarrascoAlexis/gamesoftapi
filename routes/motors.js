@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        db.query(generateQuery("fav", results, req.body.filter), (err, results) => {
+        db.query(generateQuery("motor", results, req.body.filter), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
         })
@@ -31,11 +31,17 @@ router.get("/", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
-    if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
-    
+    if(!config.trustedsIp.includes(req.socket.remoteAddress)) {
+        res.json({"error": "acces denied"})
+        return;
+    }
+
     let { name, description, link, image } = req.body;
     db.query('INSERT into motor VALUES (NULL, ?, ?, ?, ?)', [name, description, link, image], (err, results) => {
-        if(err) res.json({"error": err})
+        if(err) {
+            res.json({"error": err})
+            throw err;
+        }
         else res.json(results)
     })
 })

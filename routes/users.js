@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        db.query(generateQuery("fav", results, req.body.filter), (err, results) => {
+        db.query(generateQuery("account", results, req.body.filter), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
         })
