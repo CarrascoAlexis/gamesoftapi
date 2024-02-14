@@ -52,7 +52,7 @@ router.post("/create", (req, res) => {
             res.json({"error": `Account with id ${account_id} undefined`})
             return;
         }
-        const token = require('crypto').randomBytes(50).toString('hex');
+        const token = require('crypto').randomBytes(48).toString('hex');
         db.query('INSERT into session VALUES (NULL, ?, ?, ?, CURDATE())', [ip, token, account_id], (err, results) => {
                 if(err) {
                     res.json({"error": err})
