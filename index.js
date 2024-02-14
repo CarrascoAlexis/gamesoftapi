@@ -24,6 +24,11 @@ db.connect((err) => {
     console.log('Connected to MySQL database');
 });
 
+app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    next();
+  });
+
 app.use(express.json())
 app.use("/users", usersRouter)
 app.use("/games", gamesRouter)
@@ -48,7 +53,6 @@ app.post("/connectuser", (req, res) => {
 
 // API Main page (useless)
 app.get('/', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
     res.send(`Succesfully connected to ${db.config.database} Database.`)
 })
 app.get('/ip', (req, res) => {

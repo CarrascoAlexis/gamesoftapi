@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/CarrascoAlexis/gamesoftapi#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.18.2",
     "mysql2": "^3.9.1",
