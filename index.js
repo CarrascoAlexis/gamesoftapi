@@ -48,6 +48,7 @@ app.post("/connectuser", (req, res) => {
 
 // API Main page (useless)
 app.get('/', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
     res.send(`Succesfully connected to ${db.config.database} Database.`)
 })
 app.get('/ip', (req, res) => {
