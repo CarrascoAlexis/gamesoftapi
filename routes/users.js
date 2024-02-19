@@ -9,9 +9,9 @@ const db = mysql.createConnection(config.db)
 const { generateQuery } = require('../functions')
 
 router.get("/", (req, res) => {
-    if(req.body.filter == undefined || req.body.filter == null)
+    if(req.query.filter == undefined || req.query.filter == null)
     {
-        db.query('SELECT * FROM account', (err, results) => {
+        db.query('SELECT id, username, email, profile_picture, public_profil FROM account', (err, results) => {
             if(err) res.json({"error": err})
             else res.json(results)
         })
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        db.query(generateQuery("account", results, req.body.filter), (err, results) => {
+        db.query(generateQuery("account", results, req.query.filter, "id, username, email, profile_picture, public_profil"), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
         })
@@ -43,8 +43,6 @@ router.post("/create", (req, res) => {
     let { username, email, password, profile_picture, grants, first_name, last_name, profile_public } = req.body;
     if(profile_public == null || profile_public == undefined) profile_public = 0
     if(grants == null ||grants == undefined) grants = 0;
-    console.log({ username, email, password, profile_picture, grants, first_name, last_name, profile_public })
-    console.log("COUCOU")
     db.query('INSERT into account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)', [username, email, password, profile_picture, grants, first_name, last_name, profile_public], (err, results) => {
         if(err) res.json({"error": err})
         else res.json(results)

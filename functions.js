@@ -1,5 +1,10 @@
-const generateQuery = (table, rows, filters) => {
-    let query = `SELECT * FROM ${table} WHERE `
+
+const bcrypt = require('bcrypt');
+const { db } = require('./config');
+const saltRounds = 10
+
+exports.generateQuery = function(table, rows, filters, columns = "*") {
+    let query = `SELECT ${columns} FROM ${table} WHERE `
     rows.forEach((element, idx, array) => {
         if(filters[element.COLUMN_NAME] != undefined && filters[element.COLUMN_NAME] != null)
         {
@@ -14,4 +19,18 @@ const generateQuery = (table, rows, filters) => {
 } 
 
 
-module.exports.generateQuery = generateQuery
+exports.cryptPassword = function(password) {
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        if(err) return err;
+        return hash;
+    });
+};
+ 
+exports.comparePassword = async function(password, hash, res) {
+    await bcrypt.compare(password, hash, function(err, result) {
+        if(err) return err;
+        if (result) res.send(true)
+        else res.send(false)
+        return;
+      });
+};

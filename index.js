@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors')
 
 const app = express();
 const PORT = process.env.PORT || 5100;
@@ -15,6 +16,8 @@ const typesRouter = require("./routes/types")
 const favRouter = require("./routes/favourites")
 const sessionsRouter = require("./routes/sessions")
 
+const { cryptPassword, comparePassword } = require('./functions')
+
 // Connection to database
 db.connect((err) => {
     if (err) {
@@ -27,7 +30,17 @@ db.connect((err) => {
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*")
     next();
-  });
+});
+
+app.use(function(req, res, next) {
+    if(!config.trustedsIp.includes(req.socket.remoteAddress)) {
+        res.json({"error": "acces denied"})
+        return;
+    }
+    next();
+});
+
+app.use(cors());
 
 app.use(express.json())
 app.use("/users", usersRouter)
@@ -42,12 +55,15 @@ app.use("/sessions", sessionsRouter)
  */
 app.post("/connectuser", (req, res) => {
     if(!config.trustedsIp.includes(req.socket.remoteAddress)) res.json({"error": "acces denied"})
-    const { id, pass } = req.body;
-    console.log(id)
-    console.log(pass)
-    db.query('SELECT id FROM account WHERE id = ? AND password = ?', [id, pass], (err, results) => {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    const { id, pass } = req.body.params;
+    db.query('SELECT id, password FROM account WHERE id = ?', [id], (err, results) => {
         if(err) res.json({"error": err})
-        else res.json(results)
+        else
+        {
+            comparePassword(pass, results[0].password, res)
+            return;
+        }
     })
 })
 

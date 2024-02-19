@@ -9,7 +9,7 @@ const db = mysql.createConnection(config.db)
 const { generateQuery } = require('../functions')
 
 router.get("/", (req, res) => {
-    if(req.body.filter == undefined || req.body.filter == null)
+    if(req.query.filter == undefined || req.query.filter == null)
     {
         db.query('SELECT * FROM fav', (err, results) => {
             if(err) res.json({"error": err})
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        db.query(generateQuery("fav", results, req.body.filter), (err, results) => {
+        db.query(generateQuery("fav", results, req.query.filter), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
         })

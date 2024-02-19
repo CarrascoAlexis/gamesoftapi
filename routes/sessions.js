@@ -9,9 +9,9 @@ const db = mysql.createConnection(config.db)
 const { generateQuery } = require('../functions')
 
 router.get("/", (req, res) => {
-    if(req.body.filter == undefined || req.body.filter == null)
+    if(req.query.filter == undefined || req.query.filter == null)
     {
-        db.query('SELECT * FROM session', (err, results) => {
+        db.query('SELECT account_id, creation_date, ephemeral FROM session', (err, results) => {
             if(err) res.json({"error": err})
             else res.json(results)
         })
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
             res.json({"error": err})
             return;
         }
-        db.query(generateQuery("session", results, req.body.filter), (err, results) => {
+        db.query(generateQuery("session", results, req.query.filter, "account_id, creation_date"), (err, results) => {
             if(err) res.json({"error": err})
             res.json(results)
         })
@@ -31,13 +31,10 @@ router.get("/", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
-    if(!config.trustedsIp.includes(req.socket.remoteAddress)) {
-        res.json({"error": "acces denied"})
-        return;
-    }
-
-    let { ip, account_id } = req.body;
-    if(ip == undefined || ip == null)
+    let { ip, account_id, ephemeral } = req.body.params;
+    if(ephemeral == "1") ephemeral = 1
+    else ephemeral == 0
+    if(ip == undefined || ip == null || ip == 'undefined')
     {
         res.json({"error": `No IP Defined`})
         return;
@@ -53,7 +50,7 @@ router.post("/create", (req, res) => {
             return;
         }
         const token = require('crypto').randomBytes(94).toString('hex').substring(0, 48);
-        db.query('INSERT into session VALUES (NULL, ?, ?, ?, CURDATE())', [ip, token, account_id], (err, results) => {
+        db.query('INSERT into session VALUES (NULL, ?, ?, ?, CURDATE(), ?)', [ip, token, account_id, ephemeral], (err, results) => {
                 if(err) {
                     res.json({"error": err})
                     throw err;
